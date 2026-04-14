@@ -2264,6 +2264,14 @@ body.inner-page .hero-footer {
     border-radius: 24px;
   }
 
+  .hero-panel-top-middle,
+  .hero-panel-top-right,
+  .hero-panel-bottom-middle,
+  .hero-panel-bottom-right {
+    height: 250px;
+    min-height: 250px;
+  }
+
   .hero-panel-image {
     border-radius: 22px;
   }
@@ -2396,6 +2404,7 @@ body.inner-page .hero-footer {
   .hero-panel-top-right,
   .hero-panel-bottom-middle,
   .hero-panel-bottom-right {
-    min-height: 220px;
+    height: 250px;
+    min-height: 250px;
   }
 }
