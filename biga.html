@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biga | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a class="is-active" href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card">
+      <p class="section-kicker">Karnevalska satira</p>
+      <h2>Biga zbunio selo</h2>
+      <p class="section-lead">Predsjednik udruge Mladeži Biga otvorio je novu rundu lokalnih rasprava najavom maškara za Valentinovo, uz objašnjenje da “to nitko više ne slavi”.</p>
+    </section>
+
+    <section class="article-page">
+      <article class="article-shell">
+        <div class="article-masthead">
+          <p class="section-story-kicker">Izdvojeno</p>
+          <h3>PREDSJEDNIK UDRUGE MALDEŽI BIGA ZBUNIO SELO: MAŠKARE NA VALENTINOVO JER “NITKO TO NE SLAVI”</h3>
+          <p class="article-standfirst">Biga uvjeren da će cilo selo u kostime, a ispalo je da cilo selo na večeri dok on pokušava oživiti maškare u terminu koji nitko nije očekiva.</p>
+        </div>
+
+        <div class="article-body">
+          <p class="article-opening">Biga. Dok se ostatak svita 14. veljače sprema na romantične večere, svijeće i srčeka, predsjednik udruge Mladeži Biga ima sasvim drugu viziju, maškare. I to ne bilo kad, nego baš na Valentinovo, jer je, kako sam kaže, bio čvrsto uvjeren da “to niko više ne slavi”.</p>
+
+          <p>“Ma kakvo Valentinovo, to ti je izmišljotina”, izjavio je predsjednik dok je lipo dogovara muziku, šank i nagrade za najbolju masku. “Reka san, ajmo mi napravit maškare, ko će to ić na večeru u subotu?”</p>
+
+          <blockquote class="article-pullquote">“Reka san, ajmo mi napravit maškare, ko će to ić na večeru u subotu?”</blockquote>
+
+          <p>Prema planu, cilo selo triba doći maskirano u navodno najstrašnije maske. No realnost je malo drukčija. Povodom sastanka je već bilo manja. “Ja san mislia da će svi doć”, kaže predsjednik dok gleda u poluprazni hodnik škole.</p>
+
+          <p>Posebno ga je pogodilo što su mu i najvjerniji članovi udruge javili da “ne mogu doć jer imaju rezervaciju”. Unatoč svemu, predsjednik ne odustaje. Za dogodine već ima novi plan: maškare za Uskrs, jer, kako kaže, “ko još to slavi”.</p>
+        </div>
+
+      </article>
+
+    </section>
+
+    <section class="engagement-section" data-article-id="biga" data-article-title="Biga">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-biga" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krnjo | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a class="is-active" href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card">
+      <p class="section-kicker">Karnevalska satira</p>
+      <h2>Krnjo na dijeti</h2>
+      <p class="section-lead">Ovogodišnji cilj karnevala je jasan: Krnjo mora biti veći od mačke, jer selo još pamti prošlogodišnji skromni format i sve komentare koji su uslijedili.</p>
+    </section>
+
+    <section class="article-page">
+      <article class="article-shell">
+        <div class="article-masthead">
+          <p class="section-story-kicker">Karnevalska satira</p>
+          <h3>KRNJO NA DIJETI? OVE GODINE CILJ JE - BITI VEĆI OD MAČKE!</h3>
+          <p class="article-standfirst">Nakon što je prošlogodišnji Krnjo ostao upamćen kao najmanji u povijesti, službeno manji čak i od prosječne kućne mačke, organizatori ove godine najavljuju ozbiljan zaokret.</p>
+        </div>
+
+        <div class="article-body">
+          <p class="article-opening">Nakon što je prošlogodišnji Krnjo ostao upamćen kao najmanji u povijesti, službeno manji čak i od prosječne kućne mačke, nestrpljivo se iščekuje ovogodišnje izdanje. Naime, prošlogodišnji Krnjo izazvao je lavinu komentara, a neki su se pitali je li riječ o karnevalskoj lutki ili izgubljenom kućnom ljubimcu.</p>
+
+          <p>Djeca su ga pokušavala maziti. Organizatori ove godine poručuju: “Nećemo ponoviti grešku.” Kako doznajemo iz pouzdanih izvora, Krnjo je već prošao fazu “nabildavanja”, hranjen je isključivo domaćom hranom, a spominje se i pojačana porcija, čisto da se osigura da nadmaši prošlogodišnju mačku za barem nekoliko kilograma.</p>
+
+          <blockquote class="article-pullquote">“Samo da ove godine ne moramo povećavati Krnju na mobitelu da ga vidimo.”</blockquote>
+
+          <p>“Ne tražimo mi puno”, kaže jedan mještanin. “Samo da ove godine ne moramo povećavati Krnju na mobitelu da ga vidimo.” Hoće li ovogodišnji Krnjo konačno zasjeniti sve mačke u kvartu i vratiti dostojanstvo karnevalu, saznat ćemo uskoro.</p>
+
+          <p>Do tada držimo fige, mjerimo u centimetrima i nadamo se da će Krnjo napokon biti ono što zaslužujemo, Krnjo kakvog zaslužujemo.</p>
+        </div>
+
+      </article>
+
+    </section>
+
+    <section class="engagement-section" data-article-id="krnjo" data-article-title="Krnjo">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-krnjo" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>

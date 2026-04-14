@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bingo | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a class="is-active" href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card section-hero-card-dogadjaji">
+      <p class="section-kicker">U broju</p>
+      <h2>Bingo ulazi u broj</h2>
+      <p class="section-lead">Malo binga, malo satire i dovoljno razloga za novu seosku razbibrigu koja sasvim prirodno završava kao tema izdanja.</p>
+      <div class="section-hero-meta">
+        <span>U broju</span>
+        <span>Seoska razbibriga</span>
+        <span>Lokalni humor</span>
+      </div>
+    </section>
+
+    <section class="article-page">
+      <article class="article-shell">
+        <div class="article-masthead">
+          <p class="section-story-kicker">U broju</p>
+          <h3>BINGO BRIŠEVO ULAZI U RITAM SELA</h3>
+          <p class="article-standfirst">Nova razbibriga mjesta spaja bingo, lokalni humor i onu vrstu natjecateljske tišine koja traje sve dok netko ne vikne broj prije reda.</p>
+        </div>
+
+        <figure class="article-feature-image">
+          <img src="assets/u-broju-bingo.png" alt="Bingo Briševo">
+          <figcaption>Bingo ulazi u izdanje kao nova lokalna disciplina između šale, čekanja i komentara iz zadnjeg reda.</figcaption>
+        </figure>
+
+        <div class="article-body">
+          <p class="article-opening">Bingo Briševo polako ulazi u kategoriju događaja o kojima se ne priča samo zato što su zabavni, nego i zato što svatko u selu već ima teoriju kako bi se to tribalo voditi, tko je bija blizu dobitka i tko je opet glasno komentira više nego igra.</p>
+
+          <p>U praksi, bingo je posta nova seoska razbibriga: dovoljno ozbiljna da se brojevi prate bez treptaja, a dovoljno smišna da jedna krivo pročitana kuglica otvori raspravu do kraja večeri. Neki dolaze zbog igre, neki zbog društva, a neki samo da vide tko će prvi reći da je sve bilo sumnjivo.</p>
+
+          <blockquote class="article-pullquote">“Nije stvar u dobitku, nego da se zna tko je bija najbliže.”</blockquote>
+
+          <p>Kako god završilo, bingo se već upisao među one male događaje koji drže selo na okupu. A to je, u Briševu, često važnije od same nagrade.</p>
+        </div>
+
+      </article>
+    </section>
+
+    <section class="engagement-section" data-article-id="bingo" data-article-title="Bingo">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-bingo" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>

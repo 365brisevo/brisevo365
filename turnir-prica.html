@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turnir | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a href="maskare.html">Karnevalska satira</a>
+      <a class="is-active" href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card section-hero-card-turnir">
+      <p class="section-kicker">Turnir</p>
+      <h2>Povijesni savez na pomolu</h2>
+      <p class="section-lead">Šime Koza i baka Njare udružili su snage za nogometni turnir lita, a B Bar se već spominje kao glavni sponzor događaja koji trese selo.</p>
+      <div class="section-hero-meta">
+        <span>Glavna priča</span>
+        <span>Lito 2026.</span>
+        <span>Sportska satira</span>
+      </div>
+    </section>
+
+    <section class="article-page">
+      <article class="article-shell">
+        <div class="article-masthead">
+          <p class="section-story-kicker">Glavna priča</p>
+          <h3>POVIJESNI SAVEZ NA POMOLU: Šime Koza i baka Njare udružili snage za nogometni turnir lita, B Bar glavni sponzor</h3>
+          <p class="article-standfirst">Dok se narod još nije ni oporavio od prošlogodišnjeg turnira, stiže vijest koja je uzdrmala misto do temelja i najavila lito prepuno logistike, sudaca i priča do ranih jutarnjih sati.</p>
+        </div>
+
+        <figure class="article-feature-image">
+          <img src="assets/panel-turnir.png" alt="Šime Koza i baka Njare na glavnoj priči o turniru">
+          <figcaption>Šime Koza i baka Njare u kadru koji je otvorio glavnu priču turnirskog lita.</figcaption>
+        </figure>
+
+        <div class="article-body">
+          <p class="article-opening">Dok se narod još nije ni oporavija od prošlogodišnjeg turnira, stiže vijest koja je uzdrmala misto do temelja, Šime Koza i baka Njare službeno su ušli u suradnju oko organizacije velikog ljetnog nogometnog turnira, koji će se održati ovo lito kad “upekne kako triba”.</p>
+
+          <p>Prema neslužbenim, ali pouzdanim izvorima, susjeda s drugog kata, do povijesnog dogovora došlo je u ranim jutarnjim satima. Šime Koza, poznat po tome šta zna svakoga u mistu i još dvoje šta ne žive tu, zadužen je za logistiku i red. S druge strane, baka Njare preuzela je organizaciju ekipa, raspored utakmica i sudce, uz jasnu poruku: “Dobro. Al ja sudim ako bude nereda.”</p>
+
+          <blockquote class="article-pullquote">“Dobro. Al ja sudim ako bude nereda.”</blockquote>
+
+          <p>Posebnu radost izazvala je potvrda da je B Bar glavni sponzor turnira, čime je osigurano sve najvažnije: hladna pića, muzika posli utakmica i produžeci koji se “slučajno” razvuku do ranih jutarnjih sati. Iz B Bara poručuju da će podržat sport, zajedništvo i sve ono šta ništa pametno ne radi bez dobre ekipe.</p>
+
+          <p>Finale je planirano za večer kad se ionako ništa pametno ne radi. Nagrade još nisu službeno potvrđene, ali već se po selu šuška o peharu, janjetini i vječnoj slavi na zidu B Bara.</p>
+        </div>
+
+      </article>
+    </section>
+
+    <section class="engagement-section" data-article-id="turnir" data-article-title="Turnir">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-turnir" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>

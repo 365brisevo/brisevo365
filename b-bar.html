@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B-Bar | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a class="is-active" href="b-bar.html">B-Bar</a>
+      <a href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card section-hero-card-bbar">
+      <p class="section-kicker">B-Bar</p>
+      <h2>Mjesto gdje priče ostaju žive</h2>
+      <p class="section-lead">B-Bar je i dalje neformalna redakcija sela, a ova podstranica zasad nosi jednu glavnu misao: gotovo svaka važna priča prije ili kasnije završi za stolom ili uz šank.</p>
+      <div class="section-hero-meta">
+        <span>1 glavni komentar</span>
+        <span>Lokalni punkt</span>
+        <span>Priče iz šanka</span>
+      </div>
+    </section>
+
+    <section class="section-card-grid">
+      <article class="section-story-card">
+        <div>
+          <p class="section-story-kicker">Komentar</p>
+          <h3>Zašto svaka priča prije ili kasnije završi u B-Baru</h3>
+          <p>Jer se u Briševu najvažnije vijesti ne čekaju na oglasnoj ploči, nego stignu kroz razgovor i osmijeh za stolom.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="engagement-section" data-article-id="b-bar" data-article-title="B-Bar">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-b-bar" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>

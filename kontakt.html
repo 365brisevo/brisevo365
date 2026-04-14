@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pošalji priču | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta is-active" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card">
+      <p class="section-kicker">Pošalji priču</p>
+      <h2>Uredništvo sluša selo</h2>
+      <p class="section-lead">Imate trač, prijedlog, događaj ili veliku lokalnu priču? Pošaljite uredništvu temu koja zaslužuje završiti u sljedećem broju.</p>
+    </section>
+
+    <section class="section-card-grid">
+      <article class="section-story-card">
+        <div>
+          <p class="section-story-kicker">Što šaljete</p>
+          <h3>Priče, najave i lokalne dojave</h3>
+          <p>Šaljite sve što može nasmijati, zainteresirati ili otvoriti novu temu u mjestu.</p>
+        </div>
+      </article>
+      <article class="section-story-card">
+        <div>
+          <p class="section-story-kicker">Kako pišete</p>
+          <h3>Kratko, jasno i lokalno</h3>
+          <p>Dovoljna je jedna dobra rečenica, ime teme i zašto mislite da to selo mora pročitati.</p>
+        </div>
+      </article>
+      <article class="section-story-card section-story-card-featured">
+        <div>
+          <p class="section-story-kicker">Kontakt</p>
+          <h3>Pošalji priču uredništvu 365 Briševo</h3>
+          <p>Stranica koristi javni kontakt obrazac koji priprema e-mail poruku. Nema skrivene lozinke ni privatnog portala u frontendu.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-card-grid">
+      <article class="section-story-card section-story-card-featured contact-card">
+        <div>
+          <p class="section-story-kicker">Javna prijava</p>
+          <h3>Pošaljite temu uredništvu</h3>
+          <p class="contact-intro">Ispunite kratki obrazac i otvorit ćemo pripremljeni e-mail u vašoj aplikaciji za poštu.</p>
+          <form class="contact-form">
+            <label for="contact-name">
+              Ime ili nadimak
+              <input id="contact-name" name="name" type="text" placeholder="Kako da vas potpišemo?" required>
+            </label>
+            <label for="contact-email">
+              E-mail za odgovor
+              <input id="contact-email" name="email" type="email" placeholder="vas@email.com" required>
+            </label>
+            <label for="contact-topic">
+              Naslov teme
+              <input id="contact-topic" name="topic" type="text" placeholder="Kratki naslov priče" required>
+            </label>
+            <label for="contact-message">
+              O čemu se radi?
+              <textarea id="contact-message" name="message" rows="7" placeholder="Napišite dojavu, događaj ili priču koju bi selo trebalo pročitati." required></textarea>
+            </label>
+            <button class="button" type="submit">Pripremi e-mail</button>
+            <p id="form-note" class="form-note" aria-live="polite"></p>
+          </form>
+        </div>
+      </article>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

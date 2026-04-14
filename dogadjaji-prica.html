@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Događaji | 365 Briševo</title>
+  <link rel="icon" type="image/png" href="assets/logo-365-brisevo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="fullscreen-background inner-page">
+  <header class="hero-header">
+    <div class="hero-brand">
+      <img class="corner-logo" src="assets/logo-365-brisevo.png" alt="365 Briševo logo">
+      <div class="corner-brand-text">
+        <p>Satirični list mjesta</p>
+        <h1>365 Briševo</h1>
+        <div class="corner-brand-meta">
+          <span>Broj 1</span>
+          <span>Travanj 2026.</span>
+        </div>
+      </div>
+    </div>
+    <nav class="hero-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Naslovnica</a>
+      <a href="maskare.html">Karnevalska satira</a>
+      <a href="turnir.html">Turnir</a>
+      <a href="b-bar.html">B-Bar</a>
+      <a class="is-active" href="dogadjaji.html">Događaji</a>
+      <a class="hero-nav-cta" href="kontakt.html">Pošalji priču</a>
+    </nav>
+  </header>
+
+  <main class="section-page">
+    <section class="section-hero-card section-hero-card-dogadjaji">
+      <p class="section-kicker">Događaji</p>
+      <h2>Drama na selu</h2>
+      <p class="section-lead">Darko influencer u kokošjem štrajku prolazi kroz najtežu fazu karijere, jer kokoši ne nose jaja, a seoski štand privremeno je zatvoren.</p>
+      <div class="section-hero-meta">
+        <span>Glavna najava</span>
+        <span>Seoska drama</span>
+        <span>Satira iz mjesta</span>
+      </div>
+    </section>
+
+    <section class="article-page">
+      <article class="article-shell">
+        <div class="article-masthead">
+          <p class="section-story-kicker">Događaji</p>
+          <h3>DRAMA NA SELU: Darko influencer u kokošjem štrajku</h3>
+          <p class="article-standfirst">Poznati lokalni influencer Darko, široj javnosti poznat po lifestyle savjetima, motivacijskim storijima i kokošjem biznisu, ovih dana prolazi kroz najveću krizu svoje karijere.</p>
+        </div>
+
+        <div class="article-body">
+          <p class="article-opening">Poznati lokalni influencer Darko, široj javnosti poznat po lifestyle savjetima, motivacijskim storijima i kokošjem biznisu, u usponu je prolazio kroz svaku lokalnu temu bez većih potresa. No ovih dana dočekala ga je najteža kriza njegove karijere. Naime, njegove kokoši ne nose jaja.</p>
+
+          <p>Zbog potpune nestašice jaja, Darko je bija prisiljen privremeno zatvoriti štand, popularno okupljalište di su se nekad pila craft pića i dogovarale velike životne odluke. Mještani tvrde da je stanje ozbiljno, a neki već nagađaju da kokoši traže bolje uvjete rada ili barem slobodne nedjelje.</p>
+
+          <blockquote class="article-pullquote">“Štand se nada ponovnom otvaranju čim se situacija stabilizira.”</blockquote>
+
+          <p>Prema neslužbenim informacijama, stožer za praćenje kokošjeg učinka zasad nema službeno priopćenje, ali Darko ostaje optimističan. Bliski suradnici poručuju da se intenzivno radi na motivaciji peradi, obnovi zaliha i povratku omiljenog seoskog punkta u redovan pogon.</p>
+        </div>
+
+      </article>
+    </section>
+
+    <section class="engagement-section" data-article-id="dogadjaji" data-article-title="Događaji">
+      <div class="engagement-header">
+        <div>
+          <p class="section-story-kicker">Reakcije čitatelja</p>
+          <h3>Bilješke čitatelja</h3>
+        </div>
+        <div class="like-box">
+          <button type="button" class="like-button">Sviđa mi se</button>
+          <p class="like-meta"><span class="like-count">0</span> reakcija</p>
+        </div>
+      </div>
+
+      <div class="engagement-grid">
+        <div id="comments-dogadjaji" class="comment-list-wrap">
+          <p class="section-story-kicker">Komentari</p>
+          <ul class="comment-list">
+            <li class="comments-empty">Još nema komentara. Budite prvi koji će ostaviti trag ispod članka.</li>
+          </ul>
+        </div>
+
+        <form class="comment-form">
+          <p class="section-story-kicker">Ostavi komentar</p>
+          <label>
+            Ime
+            <input type="text" name="author" placeholder="Vaše ime" required>
+          </label>
+          <label>
+            Komentar
+            <textarea name="text" rows="5" placeholder="Napišite svoje mišljenje o članku..." required></textarea>
+          </label>
+          <button type="submit" class="button">Objavi komentar</button>
+          <p class="comment-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="hero-footer">
+    <p>365 Briševo | Satirični list mjesta | Broj 1</p>
+    <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="kontakt.html">Impressum</a></p>
+  </footer>
+  <script type="module" src="auth.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-comments.js"></script>
+</body>
+</html>
