@@ -2355,6 +2355,8 @@ body.inner-page .hero-footer {
 
   .hero-panel-top-middle .hero-panel-deck {
     font-size: 0.71rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .hero-panel-button,
