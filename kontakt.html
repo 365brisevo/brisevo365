@@ -39,7 +39,7 @@
       <a href="maskare.html">Karnevalska satira</a>
       <a href="turnir.html">Turnir</a>
       <a href="b-bar.html">B-Bar</a>
-      <a href="dogadjaji.html">Događaji</a>
+      <a href="dogadjaji.html">Mudrologije</a>
       <a class="hero-nav-cta is-active" href="kontakt.html">Pošalji priču</a>
     </nav>
   </header>
@@ -66,13 +66,6 @@
           <p>Dovoljna je jedna dobra rečenica, ime teme i zašto mislite da to selo mora pročitati.</p>
         </div>
       </article>
-      <article class="section-story-card section-story-card-featured">
-        <div>
-          <p class="section-story-kicker">Kontakt</p>
-          <h3>Pošalji priču uredništvu 365 Briševo</h3>
-          <p>Stranica koristi javni kontakt obrazac koji priprema e-mail poruku. Nema skrivene lozinke ni privatnog portala u frontendu.</p>
-        </div>
-      </article>
     </section>
 
     <section class="section-card-grid">
@@ -80,15 +73,15 @@
         <div>
           <p class="section-story-kicker">Javna prijava</p>
           <h3>Pošaljite temu uredništvu</h3>
-          <p class="contact-intro">Ispunite kratki obrazac i otvorit ćemo pripremljeni e-mail u vašoj aplikaciji za poštu.</p>
-          <form class="contact-form">
+          <p class="contact-intro">Ispunite kratki obrazac i poruka će se poslati izravno uredništvu.</p>
+          <form class="contact-form" action="https://formsubmit.co/365brisevo@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="Nova prijava za 365 Briševo">
+            <input type="hidden" name="_next" value="https://365brisevo.github.io/brisevo365/kontakt.html?sent=1">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none">
             <label for="contact-name">
               Ime ili nadimak
               <input id="contact-name" name="name" type="text" placeholder="Kako da vas potpišemo?" required>
-            </label>
-            <label for="contact-email">
-              E-mail za odgovor
-              <input id="contact-email" name="email" type="email" placeholder="vas@email.com" required>
             </label>
             <label for="contact-topic">
               Naslov teme
@@ -98,7 +91,7 @@
               O čemu se radi?
               <textarea id="contact-message" name="message" rows="7" placeholder="Napišite dojavu, događaj ili priču koju bi selo trebalo pročitati." required></textarea>
             </label>
-            <button class="button" type="submit">Pripremi e-mail</button>
+            <button class="button" type="submit">Pošalji priču</button>
             <p id="form-note" class="form-note" aria-live="polite"></p>
           </form>
         </div>
