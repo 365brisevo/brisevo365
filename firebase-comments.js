@@ -1,13 +1,69 @@
+import { firebaseConfig, isFirebaseConfigured } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  query,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
 const STORAGE_KEY = "brisevo-article-engagement-v2";
 const LEGACY_STORAGE_KEY = "brisevo-article-engagement-v1";
 const USER_REACTION_KEY_PREFIX = "brisevo-reaction-";
+const COMMENT_RATE_LIMIT_KEY_PREFIX = "brisevo-comment-rate-";
+const REACTION_RATE_LIMIT_KEY_PREFIX = "brisevo-reaction-rate-";
+const memoryStorage = new Map();
+const COMMENT_COOLDOWN_MS = 30_000;
+const REACTION_COOLDOWN_MS = 800;
+const DUPLICATE_COMMENT_WINDOW_MS = 5 * 60_000;
 
 const REACTION_OPTIONS = [
-  { key: "angry", emoji: "😡", label: "Ljutito" },
-  { key: "laugh", emoji: "😆", label: "Smijeh" },
-  { key: "wow", emoji: "😮", label: "Iznenađenje" },
-  { key: "like", emoji: "👍", label: "Sviđa mi se" }
+  { key: "angry", emoji: "\u{1F621}", label: "Ljutito" },
+  { key: "laugh", emoji: "\u{1F606}", label: "Smijeh" },
+  { key: "wow", emoji: "\u{1F62E}", label: "Iznenađenje" },
+  { key: "like", emoji: "\u{1F44D}", label: "Sviđa mi se" }
 ];
+
+const state = {
+  mode: isFirebaseConfigured() ? "remote" : "local",
+  db: null,
+  app: null,
+  entries: new Map(),
+  listeners: new Map(),
+  subscriptions: new Map()
+};
+
+function storageGet(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return memoryStorage.has(key) ? memoryStorage.get(key) : null;
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+    return;
+  } catch {
+    memoryStorage.set(key, value);
+  }
+}
+
+function storageRemove(key) {
+  try {
+    window.localStorage.removeItem(key);
+    return;
+  } catch {
+    memoryStorage.delete(key);
+  }
+}
 
 function createEmptyEntry() {
   return {
@@ -18,6 +74,33 @@ function createEmptyEntry() {
       like: 0
     },
     comments: []
+  };
+}
+
+function normalizeComment(comment) {
+  const author = String(comment?.author || "").trim();
+  const text = String(comment?.text || "").trim();
+
+  let createdAt = "";
+
+  if (typeof comment?.createdAt === "string") {
+    createdAt = comment.createdAt;
+  } else if (typeof comment?.createdAtMs === "number" && Number.isFinite(comment.createdAtMs)) {
+    createdAt = new Date(comment.createdAtMs).toISOString();
+  } else if (comment?.createdAt?.toDate instanceof Function) {
+    createdAt = comment.createdAt.toDate().toISOString();
+  } else if (comment?.createdAt?.seconds) {
+    createdAt = new Date(comment.createdAt.seconds * 1000).toISOString();
+  }
+
+  return {
+    author,
+    text,
+    createdAt,
+    createdAtMs:
+      typeof comment?.createdAtMs === "number" && Number.isFinite(comment.createdAtMs)
+        ? comment.createdAtMs
+        : Date.now()
   };
 }
 
@@ -35,7 +118,10 @@ function normalizeEntry(entry) {
   }
 
   if (Array.isArray(entry?.comments)) {
-    normalized.comments = entry.comments;
+    normalized.comments = entry.comments
+      .map((comment) => normalizeComment(comment))
+      .filter((comment) => comment.author || comment.text)
+      .sort((left, right) => left.createdAtMs - right.createdAtMs);
   }
 
   return normalized;
@@ -46,7 +132,7 @@ function loadStore() {
 
   for (const key of candidateKeys) {
     try {
-      const raw = localStorage.getItem(key);
+      const raw = storageGet(key);
       if (!raw) {
         continue;
       }
@@ -60,7 +146,7 @@ function loadStore() {
 
       if (key !== STORAGE_KEY) {
         saveStore(store);
-        localStorage.removeItem(key);
+        storageRemove(key);
       }
 
       return store;
@@ -73,15 +159,15 @@ function loadStore() {
 }
 
 function saveStore(store) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+  storageSet(STORAGE_KEY, JSON.stringify(store));
 }
 
-function getArticleEntry(articleId) {
+function getLocalArticleEntry(articleId) {
   const store = loadStore();
   return normalizeEntry(store[articleId]);
 }
 
-function saveArticleEntry(articleId, entry) {
+function saveLocalArticleEntry(articleId, entry) {
   const store = loadStore();
   store[articleId] = normalizeEntry(entry);
   saveStore(store);
@@ -92,15 +178,95 @@ function totalReactions(entry) {
 }
 
 function getUserReaction(articleId) {
-  return localStorage.getItem(`${USER_REACTION_KEY_PREFIX}${articleId}`) || "";
+  return storageGet(`${USER_REACTION_KEY_PREFIX}${articleId}`) || "";
 }
 
 function setUserReaction(articleId, reactionKey) {
   if (reactionKey) {
-    localStorage.setItem(`${USER_REACTION_KEY_PREFIX}${articleId}`, reactionKey);
+    storageSet(`${USER_REACTION_KEY_PREFIX}${articleId}`, reactionKey);
   } else {
-    localStorage.removeItem(`${USER_REACTION_KEY_PREFIX}${articleId}`);
+    storageRemove(`${USER_REACTION_KEY_PREFIX}${articleId}`);
   }
+}
+
+function getClientRateState(prefix, articleId) {
+  try {
+    const raw = storageGet(`${prefix}${articleId}`);
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function setClientRateState(prefix, articleId, value) {
+  storageSet(`${prefix}${articleId}`, JSON.stringify(value));
+}
+
+function getRemainingCooldownMessage(remainingMs) {
+  const seconds = Math.max(1, Math.ceil(remainingMs / 1000));
+  return `Pričekajte ${seconds}s prije ponovnog slanja.`;
+}
+
+function validateReactionAttempt(articleId) {
+  const state = getClientRateState(REACTION_RATE_LIMIT_KEY_PREFIX, articleId);
+  const now = Date.now();
+
+  if (state?.lastAttemptAt && now - state.lastAttemptAt < REACTION_COOLDOWN_MS) {
+    return {
+      ok: false,
+      message: getRemainingCooldownMessage(REACTION_COOLDOWN_MS - (now - state.lastAttemptAt))
+    };
+  }
+
+  setClientRateState(REACTION_RATE_LIMIT_KEY_PREFIX, articleId, { lastAttemptAt: now });
+  return { ok: true };
+}
+
+function validateCommentAttempt(articleId, author, text, honeypotValue) {
+  if (honeypotValue) {
+    return {
+      ok: false,
+      message: "Poruka nije prihvaćena. Pokušajte ponovno."
+    };
+  }
+
+  const now = Date.now();
+  const rateState = getClientRateState(COMMENT_RATE_LIMIT_KEY_PREFIX, articleId);
+
+  if (rateState?.lastAttemptAt && now - rateState.lastAttemptAt < COMMENT_COOLDOWN_MS) {
+    return {
+      ok: false,
+      message: getRemainingCooldownMessage(COMMENT_COOLDOWN_MS - (now - rateState.lastAttemptAt))
+    };
+  }
+
+  const normalizedAuthor = author.trim().toLowerCase();
+  const normalizedText = text.trim().replace(/\s+/g, " ").toLowerCase();
+
+  if (
+    rateState?.lastAuthor === normalizedAuthor &&
+    rateState?.lastText === normalizedText &&
+    rateState?.lastAttemptAt &&
+    now - rateState.lastAttemptAt < DUPLICATE_COMMENT_WINDOW_MS
+  ) {
+    return {
+      ok: false,
+      message: "Isti komentar je već nedavno poslan."
+    };
+  }
+
+  setClientRateState(COMMENT_RATE_LIMIT_KEY_PREFIX, articleId, {
+    lastAttemptAt: now,
+    lastAuthor: normalizedAuthor,
+    lastText: normalizedText
+  });
+
+  return { ok: true };
 }
 
 function formatTimestamp(iso) {
@@ -185,6 +351,275 @@ function updateHomepageCard(card, entry) {
   }
 }
 
+function getCachedEntry(articleId) {
+  return normalizeEntry(state.entries.get(articleId) || getLocalArticleEntry(articleId));
+}
+
+function emitEntry(articleId, entry) {
+  const normalized = normalizeEntry(entry);
+  state.entries.set(articleId, normalized);
+
+  const listeners = state.listeners.get(articleId);
+  if (!listeners) {
+    return;
+  }
+
+  listeners.forEach((listener) => {
+    listener(normalized);
+  });
+}
+
+function subscribeToEntry(articleId, listener) {
+  const listeners = state.listeners.get(articleId) || new Set();
+  listeners.add(listener);
+  state.listeners.set(articleId, listeners);
+
+  listener(getCachedEntry(articleId));
+
+  if (state.mode === "remote") {
+    ensureRemoteSubscription(articleId);
+  }
+
+  return () => {
+    const current = state.listeners.get(articleId);
+    if (!current) {
+      return;
+    }
+
+    current.delete(listener);
+
+    if (!current.size) {
+      state.listeners.delete(articleId);
+      const unsubscribe = state.subscriptions.get(articleId);
+      if (unsubscribe) {
+        unsubscribe();
+        state.subscriptions.delete(articleId);
+      }
+    }
+  };
+}
+
+function initRemote() {
+  if (state.db || state.mode !== "remote") {
+    return state.db;
+  }
+
+  try {
+    state.app = initializeApp(firebaseConfig);
+    state.db = getFirestore(state.app);
+  } catch (error) {
+    console.warn("Firebase comments fallback to local storage.", error);
+    state.mode = "local";
+    state.db = null;
+  }
+
+  return state.db;
+}
+
+function ensureRemoteSubscription(articleId) {
+  if (state.subscriptions.has(articleId)) {
+    return;
+  }
+
+  const db = initRemote();
+  if (!db) {
+    return;
+  }
+
+  const articleRef = doc(db, "articles", articleId);
+  const commentsRef = collection(db, "articles", articleId, "comments");
+  const commentsQuery = query(commentsRef, orderBy("createdAtMs", "asc"));
+  const liveEntry = getCachedEntry(articleId);
+
+  const publish = () => {
+    emitEntry(articleId, liveEntry);
+  };
+
+  const unsubscribeArticle = onSnapshot(
+    articleRef,
+    (snapshot) => {
+      const data = snapshot.data() || {};
+      liveEntry.reactions = normalizeEntry({ reactions: data.reactions }).reactions;
+      publish();
+    },
+    (error) => {
+      console.warn(`Realtime reactions failed for ${articleId}.`, error);
+    }
+  );
+
+  const unsubscribeComments = onSnapshot(
+    commentsQuery,
+    (snapshot) => {
+      liveEntry.comments = snapshot.docs
+        .map((commentDoc) => normalizeComment(commentDoc.data()))
+        .sort((left, right) => left.createdAtMs - right.createdAtMs);
+      publish();
+    },
+    (error) => {
+      console.warn(`Realtime comments failed for ${articleId}.`, error);
+    }
+  );
+
+  state.subscriptions.set(articleId, () => {
+    unsubscribeArticle();
+    unsubscribeComments();
+  });
+}
+
+async function applyReaction(articleId, reactionKey) {
+  const rateCheck = validateReactionAttempt(articleId);
+  if (!rateCheck.ok) {
+    throw new Error(rateCheck.message);
+  }
+
+  if (state.mode !== "remote") {
+    const entry = getLocalArticleEntry(articleId);
+    const previousReaction = getUserReaction(articleId);
+
+    if (previousReaction === reactionKey) {
+      if (entry.reactions[reactionKey] > 0) {
+        entry.reactions[reactionKey] -= 1;
+      }
+      setUserReaction(articleId, "");
+    } else {
+      if (previousReaction && entry.reactions[previousReaction] > 0) {
+        entry.reactions[previousReaction] -= 1;
+      }
+      entry.reactions[reactionKey] += 1;
+      setUserReaction(articleId, reactionKey);
+    }
+
+    saveLocalArticleEntry(articleId, entry);
+    emitEntry(articleId, entry);
+    return;
+  }
+
+  const db = initRemote();
+  if (!db) {
+    return applyReaction(articleId, reactionKey);
+  }
+
+  const previousReaction = getUserReaction(articleId);
+  const nextReaction = previousReaction === reactionKey ? "" : reactionKey;
+  const articleRef = doc(db, "articles", articleId);
+
+  await runTransaction(db, async (transaction) => {
+    const snapshot = await transaction.get(articleRef);
+    const current = normalizeEntry({ reactions: snapshot.data()?.reactions });
+    const reactions = { ...current.reactions };
+
+    if (previousReaction && reactions[previousReaction] > 0) {
+      reactions[previousReaction] -= 1;
+    }
+
+    if (nextReaction) {
+      reactions[nextReaction] += 1;
+    }
+
+    transaction.set(
+      articleRef,
+      {
+        reactions,
+        updatedAt: serverTimestamp()
+      },
+      { merge: true }
+    );
+  });
+
+  setUserReaction(articleId, nextReaction);
+}
+
+async function submitComment(articleId, author, text) {
+  if (state.mode !== "remote") {
+    const entry = getLocalArticleEntry(articleId);
+    entry.comments.push({
+      author,
+      text,
+      createdAt: new Date().toISOString(),
+      createdAtMs: Date.now()
+    });
+    saveLocalArticleEntry(articleId, entry);
+    emitEntry(articleId, entry);
+    return;
+  }
+
+  const db = initRemote();
+  if (!db) {
+    return submitComment(articleId, author, text);
+  }
+
+  const articleRef = doc(db, "articles", articleId);
+
+  await setDoc(
+    articleRef,
+    {
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
+
+  await addDoc(collection(db, "articles", articleId, "comments"), {
+    author,
+    text,
+    createdAt: serverTimestamp(),
+    createdAtMs: Date.now()
+  });
+}
+
+function ensureCommentHoneypot(form) {
+  if (!form || form.querySelector('input[name="website"]')) {
+    return;
+  }
+
+  const trap = document.createElement("div");
+  trap.hidden = true;
+  trap.setAttribute("aria-hidden", "true");
+  trap.innerHTML = `
+    <label>
+      Website
+      <input type="text" name="website" tabindex="-1" autocomplete="off">
+    </label>
+  `;
+  form.appendChild(trap);
+}
+
+function getShareUrl(relativeUrl) {
+  return new URL(relativeUrl, window.location.href).toString();
+}
+
+async function shareArticle(relativeUrl, title, trigger) {
+  const url = getShareUrl(relativeUrl);
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, url });
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
+    }
+  }
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      if (trigger) {
+        const previous = trigger.textContent;
+        trigger.textContent = "✓";
+        window.setTimeout(() => {
+          trigger.textContent = previous;
+        }, 1400);
+      }
+      return;
+    }
+  } catch {
+    // Fall through to manual copy prompt when clipboard access fails.
+  }
+
+  window.prompt("Kopirajte poveznicu članka:", url);
+}
+
 function syncHomepageCards() {
   document.querySelectorAll(".hero-panel-social[data-article-id]").forEach((card) => {
     const articleId = card.getAttribute("data-article-id");
@@ -192,8 +627,7 @@ function syncHomepageCards() {
       return;
     }
 
-    const entry = getArticleEntry(articleId);
-    updateHomepageCard(card, entry);
+    updateHomepageCard(card, getCachedEntry(articleId));
 
     const userReaction = getUserReaction(articleId);
     card.querySelectorAll(".hero-reaction-button").forEach((button) => {
@@ -225,57 +659,6 @@ function renderArticleReactionBox(section, articleId, entry) {
   `;
 }
 
-function applyReaction(articleId, reactionKey) {
-  const entry = getArticleEntry(articleId);
-  const previousReaction = getUserReaction(articleId);
-
-  if (previousReaction === reactionKey) {
-    if (entry.reactions[reactionKey] > 0) {
-      entry.reactions[reactionKey] -= 1;
-    }
-    setUserReaction(articleId, "");
-  } else {
-    if (previousReaction && entry.reactions[previousReaction] > 0) {
-      entry.reactions[previousReaction] -= 1;
-    }
-    entry.reactions[reactionKey] += 1;
-    setUserReaction(articleId, reactionKey);
-  }
-
-  saveArticleEntry(articleId, entry);
-}
-
-function getShareUrl(relativeUrl) {
-  return new URL(relativeUrl, window.location.href).toString();
-}
-
-async function shareArticle(relativeUrl, title, trigger) {
-  const url = getShareUrl(relativeUrl);
-
-  try {
-    if (navigator.share) {
-      await navigator.share({ title, url });
-      return;
-    }
-
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(url);
-      if (trigger) {
-        const previous = trigger.textContent;
-        trigger.textContent = "✓";
-        window.setTimeout(() => {
-          trigger.textContent = previous;
-        }, 1400);
-      }
-      return;
-    }
-  } catch {
-    return;
-  }
-
-  window.prompt("Kopirajte poveznicu članka:", url);
-}
-
 function initHomepageInteractions() {
   document.querySelectorAll(".hero-panel-social[data-article-id]").forEach((card) => {
     if (card.dataset.bound === "1") {
@@ -286,16 +669,30 @@ function initHomepageInteractions() {
     const shareUrl = card.getAttribute("data-share-url") || "";
     const shareTitle = card.getAttribute("data-share-title") || "365 Briševo";
 
+    if (articleId) {
+      subscribeToEntry(articleId, (entry) => {
+        updateHomepageCard(card, entry);
+
+        const userReaction = getUserReaction(articleId);
+        card.querySelectorAll(".hero-reaction-button").forEach((button) => {
+          button.classList.toggle("is-selected", button.dataset.reaction === userReaction);
+        });
+      });
+    }
+
     card.querySelectorAll(".hero-reaction-button").forEach((button) => {
-      button.addEventListener("click", (event) => {
+      button.addEventListener("click", async (event) => {
         event.preventDefault();
         event.stopPropagation();
         if (!articleId || !button.dataset.reaction) {
           return;
         }
 
-        applyReaction(articleId, button.dataset.reaction);
-        syncHomepageCards();
+        try {
+          await applyReaction(articleId, button.dataset.reaction);
+        } catch (error) {
+          console.warn(`Reaction update failed for ${articleId}.`, error);
+        }
       });
     });
 
@@ -333,15 +730,18 @@ function initArticlePage() {
     commentListWrap.id = `comments-${articleId}`;
   }
 
-  const update = () => {
-    const entry = getArticleEntry(articleId);
-    renderArticleReactionBox(section, articleId, entry);
-    renderComments(commentList, entry.comments);
-    syncHomepageCards();
-  };
+  ensureCommentHoneypot(commentForm);
+
+  if (section.dataset.entryBound !== "1") {
+    subscribeToEntry(articleId, (entry) => {
+      renderArticleReactionBox(section, articleId, entry);
+      renderComments(commentList, entry.comments);
+    });
+    section.dataset.entryBound = "1";
+  }
 
   if (!section.dataset.engagementBound) {
-    section.addEventListener("click", (event) => {
+    section.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) {
         return;
@@ -352,17 +752,30 @@ function initArticlePage() {
         if (!reactionKey) {
           return;
         }
-        applyReaction(articleId, reactionKey);
-        update();
+
+        try {
+          await applyReaction(articleId, reactionKey);
+          if (commentStatus) {
+            commentStatus.textContent = "";
+            commentStatus.dataset.state = "";
+          }
+        } catch (error) {
+          if (commentStatus) {
+            commentStatus.dataset.state = "error";
+            commentStatus.textContent = error instanceof Error ? error.message : "Reakcija nije spremljena. Pokušajte ponovno.";
+          }
+          console.warn(`Reaction update failed for ${articleId}.`, error);
+        }
       }
     });
 
-    commentForm?.addEventListener("submit", (event) => {
+    commentForm?.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const formData = new FormData(commentForm);
       const author = String(formData.get("author") || "").trim();
       const text = String(formData.get("text") || "").trim();
+      const website = String(formData.get("website") || "").trim();
 
       if (!author || !text) {
         if (commentStatus) {
@@ -372,32 +785,40 @@ function initArticlePage() {
         return;
       }
 
-      const entry = getArticleEntry(articleId);
-      entry.comments.push({
-        author,
-        text,
-        createdAt: new Date().toISOString()
-      });
-      saveArticleEntry(articleId, entry);
-
-      if (commentStatus) {
-        commentStatus.dataset.state = "success";
-        commentStatus.textContent = "Komentar je objavljen.";
+      const validation = validateCommentAttempt(articleId, author, text, website);
+      if (!validation.ok) {
+        if (commentStatus) {
+          commentStatus.dataset.state = "error";
+          commentStatus.textContent = validation.message;
+        }
+        return;
       }
 
-      commentForm.reset();
-      update();
+      try {
+        await submitComment(articleId, author, text);
+        if (commentStatus) {
+          commentStatus.dataset.state = "success";
+          commentStatus.textContent = "Komentar je objavljen.";
+        }
+        commentForm.reset();
+      } catch (error) {
+        if (commentStatus) {
+          commentStatus.dataset.state = "error";
+          commentStatus.textContent = "Komentar nije spremljen. Provjerite Firebase postavke.";
+        }
+        console.warn(`Comment submit failed for ${articleId}.`, error);
+      }
     });
 
     section.dataset.engagementBound = "1";
   }
-
-  update();
 }
 
 window.addEventListener("storage", () => {
-  syncHomepageCards();
-  initArticlePage();
+  if (state.mode === "local") {
+    syncHomepageCards();
+    initArticlePage();
+  }
 });
 
 initHomepageInteractions();

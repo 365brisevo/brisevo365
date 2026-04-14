@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidReactionKey(key) {
+      return key in ['angry', 'laugh', 'wow', 'like'];
+    }
+
+    function isValidReactionMap(data) {
+      return data is map
+        && data.keys().hasOnly(['angry', 'laugh', 'wow', 'like'])
+        && data.keys().hasAll(['angry', 'laugh', 'wow', 'like'])
+        && data.angry is int && data.angry >= 0
+        && data.laugh is int && data.laugh >= 0
+        && data.wow is int && data.wow >= 0
+        && data.like is int && data.like >= 0;
+    }
+
+    function isSafeArticlePayload() {
+      return request.resource.data.keys().hasOnly(['reactions', 'updatedAt'])
+        && (!('reactions' in request.resource.data) || isValidReactionMap(request.resource.data.reactions));
+    }
+
+    function isSafeCommentPayload() {
+      return request.resource.data.keys().hasOnly(['author', 'text', 'createdAt', 'createdAtMs'])
+        && request.resource.data.author is string
+        && request.resource.data.author.size() > 0
+        && request.resource.data.author.size() <= 60
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000
+        && request.resource.data.createdAtMs is int
+        && request.resource.data.createdAtMs > 0
+        && request.resource.data.createdAtMs >= request.time.toMillis() - duration.value(1, 'h').toMillis()
+        && request.resource.data.createdAtMs <= request.time.toMillis() + duration.value(5, 'm').toMillis();
+    }
+
+    match /articles/{articleId} {
+      allow read: if true;
+      allow create, update: if isSafeArticlePayload();
+      allow delete: if false;
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isSafeCommentPayload();
+        allow update, delete: if false;
+      }
+    }
+  }
+}
