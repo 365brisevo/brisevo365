@@ -6,11 +6,11 @@ import {
   doc,
   getFirestore,
   onSnapshot,
+  orderBy,
   query,
   runTransaction,
   serverTimestamp,
-  setDoc,
-  orderBy
+  setDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 const STORAGE_KEY = "brisevo-article-engagement-v2";
@@ -213,13 +213,13 @@ function getRemainingCooldownMessage(remainingMs) {
 }
 
 function validateReactionAttempt(articleId) {
-  const state = getClientRateState(REACTION_RATE_LIMIT_KEY_PREFIX, articleId);
+  const rateState = getClientRateState(REACTION_RATE_LIMIT_KEY_PREFIX, articleId);
   const now = Date.now();
 
-  if (state?.lastAttemptAt && now - state.lastAttemptAt < REACTION_COOLDOWN_MS) {
+  if (rateState?.lastAttemptAt && now - rateState.lastAttemptAt < REACTION_COOLDOWN_MS) {
     return {
       ok: false,
-      message: getRemainingCooldownMessage(REACTION_COOLDOWN_MS - (now - state.lastAttemptAt))
+      message: getRemainingCooldownMessage(REACTION_COOLDOWN_MS - (now - rateState.lastAttemptAt))
     };
   }
 
