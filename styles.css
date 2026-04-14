@@ -2273,6 +2273,11 @@ body.inner-page .hero-footer {
     min-height: 250px;
   }
 
+  .hero-panel-top-middle {
+    height: 265px;
+    min-height: 265px;
+  }
+
   .hero-panel-image {
     border-radius: 22px;
   }
@@ -2342,6 +2347,14 @@ body.inner-page .hero-footer {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     line-clamp: 3;
+  }
+
+  .hero-panel-top-middle .hero-panel-copy h3 {
+    font-size: 0.88rem;
+  }
+
+  .hero-panel-top-middle .hero-panel-deck {
+    font-size: 0.71rem;
   }
 
   .hero-panel-button,
@@ -2436,5 +2449,10 @@ body.inner-page .hero-footer {
   .hero-panel-bottom-right {
     height: 250px;
     min-height: 250px;
+  }
+
+  .hero-panel-top-middle {
+    height: 265px;
+    min-height: 265px;
   }
 }
