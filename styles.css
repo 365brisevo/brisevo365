@@ -2393,7 +2393,7 @@ body.inner-page .hero-footer {
   }
 
   .hero-nav a.hero-nav-cta {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 
   .hero-panel-large {
