@@ -3,12 +3,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isValidReactionMap(data) {
       return data is map
-        && data.keys().hasOnly(['angry', 'laugh', 'wow', 'like'])
-        && data.keys().hasAll(['angry', 'laugh', 'wow', 'like'])
+        && data.keys().hasOnly(['angry', 'laugh', 'like'])
+        && data.keys().hasAll(['angry', 'laugh', 'like'])
         && data.angry is int && data.angry >= 0
         && data.laugh is int && data.laugh >= 0
-        && data.wow is int && data.wow >= 0
         && data.like is int && data.like >= 0;
+    }
+
+    function isRecentClientTime(createdAtMs) {
+      return createdAtMs is int
+        && createdAtMs > request.time.toMillis() - 60 * 60 * 1000
+        && createdAtMs < request.time.toMillis() + 5 * 60 * 1000;
     }
 
     match /articles/{articleId} {
@@ -26,8 +31,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
-          && request.resource.data.createdAtMs is int
-          && request.resource.data.createdAtMs > 0;
+          && isRecentClientTime(request.resource.data.createdAtMs);
         allow update, delete: if false;
       }
     }
@@ -45,8 +49,7 @@ service cloud.firestore {
         && request.resource.data.message.size() > 0
         && request.resource.data.message.size() <= 3000
         && request.resource.data.source == 'kontakt'
-        && request.resource.data.createdAtMs is int
-        && request.resource.data.createdAtMs > 0;
+        && isRecentClientTime(request.resource.data.createdAtMs);
       allow update, delete: if false;
     }
   }

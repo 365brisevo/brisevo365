@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import {
   addDoc,
   collection,
+  deleteField,
   doc,
   getFirestore,
   onSnapshot,
@@ -26,7 +27,6 @@ const DUPLICATE_COMMENT_WINDOW_MS = 5 * 60_000;
 const REACTION_OPTIONS = [
   { key: "angry", emoji: "\u{1F621}", label: "Ljutito" },
   { key: "laugh", emoji: "\u{1F606}", label: "Smijeh" },
-  { key: "wow", emoji: "\u{1F62E}", label: "Iznenađenje" },
   { key: "like", emoji: "\u{1F44D}", label: "Sviđa mi se" }
 ];
 
@@ -70,7 +70,6 @@ function createEmptyEntry() {
     reactions: {
       angry: 0,
       laugh: 0,
-      wow: 0,
       like: 0
     },
     comments: []
@@ -519,7 +518,10 @@ async function applyReaction(articleId, reactionKey) {
     transaction.set(
       articleRef,
       {
-        reactions,
+        reactions: {
+          ...reactions,
+          wow: deleteField()
+        },
         updatedAt: serverTimestamp()
       },
       { merge: true }
