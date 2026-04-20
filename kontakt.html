@@ -73,12 +73,9 @@
         <div>
           <p class="section-story-kicker">Javna prijava</p>
           <h3>Pošaljite temu uredništvu</h3>
-          <p class="contact-intro">Ispunite kratki obrazac i poruka će se poslati izravno uredništvu.</p>
-          <form class="contact-form" action="https://formsubmit.co/365brisevo@gmail.com" method="POST">
-            <input type="hidden" name="_subject" value="Nova prijava za 365 Briševo">
-            <input type="hidden" name="_next" value="https://365brisevo.github.io/brisevo365/kontakt.html?sent=1">
-            <input type="hidden" name="_template" value="table">
-            <input type="text" name="_honey" style="display:none">
+          <p class="contact-intro">Ispunite kratki obrazac i dojava će se spremiti uredništvu.</p>
+          <form class="contact-form">
+            <input type="text" name="website" autocomplete="off" tabindex="-1" style="display:none">
             <label for="contact-name">
               Ime ili nadimak
               <input id="contact-name" name="name" type="text" placeholder="Kako da vas potpišemo?" required>
@@ -103,5 +100,6 @@
     <p>Digitalno izdanje | Travanj 2026. | <a href="kontakt.html">Kontakt</a> | <a href="kontakt.html">Pošalji priču</a> | <a href="impressum.html">Impressum</a></p>
   </footer>
   <script src="script.js"></script>
+  <script type="module" src="contact-form.js"></script>
 </body>
 </html>
