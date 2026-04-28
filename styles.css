@@ -2279,8 +2279,17 @@ body.inner-page .hero-footer {
     min-height: 265px;
   }
 
+  .hero-panel-bottom-middle {
+    height: 262px;
+    min-height: 262px;
+  }
+
   .hero-panel-image {
     border-radius: 22px;
+  }
+
+  .hero-panel-bottom-middle .hero-panel-image-fill {
+    object-position: center 18%;
   }
 
   .hero-panel-copy {
@@ -2455,5 +2464,10 @@ body.inner-page .hero-footer {
   .hero-panel-top-middle {
     height: 265px;
     min-height: 265px;
+  }
+
+  .hero-panel-bottom-middle {
+    height: 262px;
+    min-height: 262px;
   }
 }
