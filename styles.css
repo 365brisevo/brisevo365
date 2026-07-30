@@ -1422,17 +1422,6 @@ h3 {
   background: #fff0d4;
 }
 
-.article-masthead {
-  padding-bottom: 0.35rem;
-}
-
-.article-standfirst {
-  font-size: 1.02rem;
-  color: var(--muted);
-  max-width: 68ch;
-  margin: 0.7rem 0 0.95rem;
-}
-
 .article-body {
   display: grid;
   gap: 0.85rem;
